@@ -1,0 +1,16 @@
+* {
+    background-color: #FFF;
+}
+.cadre {
+    border: 4px ridge black ;
+    width: 90vw;
+    height:100vh;
+    padding-bottom: 5px;
+}
+td {
+    padding: 54px 5px;
+}
+label {
+    font-weight: bold;
+
+}

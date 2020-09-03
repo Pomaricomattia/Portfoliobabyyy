@@ -1,32 +1,30 @@
 <?php
 
-$bdd = new PDO('mysql:host=localhost;dbname=espace_membre','root','');
+$bdd = new PDO('mysql:host=localhost;dbname=espace_membre;port=3306','root','');
+$bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if(isset($_POST['forminscription'])){
-    
-        $pseudo = htmlspecialchars($_POST['pseudo']);
-        $mail = htmlspecialchars($_POST['mail']);
+        $pseudo = htmlspecialchars($_POST['Pseudo']);
+        $mail = htmlspecialchars($_POST['Mail']);
         $mdp = sha1($_POST['mdp']);
         $mdp2= sha1($_POST['mdp2']);
 
-    if(!empty($_POST['pseudo']) AND !empty($_POST['mail']) AND!empty($_POST['mdp']) AND!empty($_POST['mdp2']))
+    if(!empty($_POST['Pseudo']) AND !empty($_POST['Mail']) AND !empty($_POST['mdp']) AND !empty($_POST['mdp2']))
     {
         
 
         $pseudolength = strlen($pseudo);
-        if($pseudolenght <= 255)
+        if($pseudolength <= 255)
         {
-          if($mail == $mail){
-              if(filter_var($mail,FILTER_VALIDATE_EMAIL))
-              {
-            $reqmail = $bdd->prepare("SELECT * FROM membres WHERE mail = ?");
-            $reqmail->execute(array($mail));
-            $mailexist = $reqmail-> rowCount();
-            if($mailexist == 0)
-            {
+
+              if(filter_var($mail,FILTER_VALIDATE_EMAIL)) {
+                  $reqmail = $bdd->prepare("SELECT * FROM membres WHERE Mail = ?");
+                  $reqmail->execute(array($mail));
+                  $mailexist = $reqmail->rowCount();
+                  if ($mailexist == 0) {
               
                 if($mdp == $mdp2) {
-                    $insertmbr = $bdd->prepare("INSERT INTO membres(pseudo, mail, motdepasse) VALUES (? , ?, ?)");
+                    $insertmbr = $bdd->prepare("INSERT INTO membres(Pseudo ,Mail , mdp) VALUES (? , ?, ?)");
                     $insertmbr ->execute(array($pseudo,$mail,$mdp));
                     $_SESSION['comptecree'] = "votre compte a bien été créé";
                     header('Location: ../index.php');
@@ -53,7 +51,7 @@ if(isset($_POST['forminscription'])){
         $erreur ="tous les champs doivent être remplis !";
     }
 }
-}
+
 
 
 
@@ -79,7 +77,7 @@ if(isset($_POST['forminscription'])){
     <label for="pseudo">Pseudo :</label>
     </td>
     <td>
-    <input type="text" placeholder="Votre pseudo" name="pseudo" />
+    <input type="text" placeholder="Votre pseudo" name="Pseudo" />
     <td>
     </tr> 
     <tr>
@@ -87,7 +85,7 @@ if(isset($_POST['forminscription'])){
     <label for="email">Mail : </label>
     </td>
     <td>
-    <input type="email" placeholder="Votre mail" id="mail" name="mail"  />
+    <input type="email" placeholder="Votre mail" id="mail" name="Mail"  />
     <td>
     </tr>
     <tr>
@@ -109,6 +107,7 @@ if(isset($_POST['forminscription'])){
     <tr>
     <td></td>
     <td>
+    <input type="hidden" name="forminscription" value="Inscription"/>
     <input type="submit" value="Inscription"/>
     </tr>
     </td>

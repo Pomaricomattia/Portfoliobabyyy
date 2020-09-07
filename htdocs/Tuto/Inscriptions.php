@@ -9,7 +9,8 @@ if(isset($_POST['forminscription'])){
         $mdp = sha1($_POST['mdp']);
         $mdp2= sha1($_POST['mdp2']);
 
-    if(!empty($_POST['Pseudo']) AND !empty($_POST['Mail']) AND !empty($_POST['mdp']) AND !empty($_POST['mdp2']))
+    
+    if(!empty($_POST['Pseudo']) AND !empty($_POST['Mail']) AND!empty($_POST['mdp']) AND!empty($_POST['mdp2']))
     {
         
 
@@ -22,6 +23,7 @@ if(isset($_POST['forminscription'])){
                   $reqmail->execute(array($mail));
                   $mailexist = $reqmail->rowCount();
                   if ($mailexist == 0) {
+
               
                 if($mdp == $mdp2) {
                     $insertmbr = $bdd->prepare("INSERT INTO membres(Pseudo ,Mail , mdp) VALUES (? , ?, ?)");
@@ -37,12 +39,24 @@ if(isset($_POST['forminscription'])){
                 $erreur = "Adresse mail deja utilisée";
             }
                 }
+
+                      if ($mdp == $mdp2) {
+                          $insertmbr = $bdd->prepare("INSERT INTO membres(Pseudo, Mail, mdp) VALUES (? , ?, ?)");
+                          $insertmbr->execute(array($pseudo, $mail, $mdp));
+                          $_SESSION['comptecree'] = "votre compte a bien été créé";
+                          header('Location: ../index.php');
+                      } else {
+                          $erreur = " Vos mot de passe ne correspondent pas !";
+                      }
+                  } else {
+                      $erreur = "Adresse mail deja utilisée";
+                  }
+              }
                 
          else {
              $erreur = "Votre adresse mail n'est pas valide !";
          }
     
-        }
         else {
             $erreur = "Votre pseudo ne doit pas dépasser 255 caractères";
         }
@@ -50,7 +64,7 @@ if(isset($_POST['forminscription'])){
         else {
         $erreur ="tous les champs doivent être remplis !";
     }
-}
+
 
 
 
@@ -58,7 +72,7 @@ if(isset($_POST['forminscription'])){
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=, initial-scale=1.0">
@@ -66,11 +80,11 @@ if(isset($_POST['forminscription'])){
     <title>Document</title>
 </head>
 <body>
-    <div align="center" > 
+    <div align="center" >
     <h2>Inscriptions</h2>
-    <div  class="cadre" > 
-
-    <form method="POST" action=""> 
+    <div  class="cadre" >
+TEST
+    <form method="POST"  action="">
     <table>
     <tr>
     <td>
@@ -79,7 +93,7 @@ if(isset($_POST['forminscription'])){
     <td>
     <input type="text" placeholder="Votre pseudo" name="Pseudo" />
     <td>
-    </tr> 
+    </tr>
     <tr>
     <td>
     <label for="email">Mail : </label>
@@ -113,7 +127,7 @@ if(isset($_POST['forminscription'])){
     </td>
     </table>
     </form>
-    </div>  
+    </div>
     <?php
     var_dump($_POST);
     if(isset($erreur))
